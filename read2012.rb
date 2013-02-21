@@ -5,7 +5,7 @@ require 'pp'
 require 'time'
 require 'date'
 require 'mongo'
-require 'csv'
+require 'fastercsv'
 
 MONGO_HOST = ENV["MONGO_HOST"]
 raise(StandardError,"Set Mongo hostname in  ENV: 'MONGO_HOST'") if !MONGO_HOST
@@ -24,9 +24,13 @@ db = Mongo::Connection.new(MONGO_HOST, MONGO_PORT.to_i).db("ccg")
 # end
 
 # hoursColl = db.collection("hours")
-arr_of_arrs = CSV.read("ccg.garden.20feb2013.csv")
+arr_of_arrs = FasterCSV.read("ccg.garden.20feb2013.csv")
 arr_of_arrs.each do |a|
-  pp a
+  a.each do |b|
+    pp b.class
+  end
+  pp a[8]
+  pp a[8].class
   first_name = a[0]
   last_name = a[1]
   email = a[2]
@@ -36,12 +40,13 @@ arr_of_arrs.each do |a|
   date_joined = a[6]
   latest_renewal = a[7]
   amt_paid = a[8]
-  plot_counts = a[9].to_i
-  member_counts = a[10].to_i
+  plot_counts = a[9]
+  member_counts = a[10]
   plot_nummber = a[11]
-  $stderr.printf("1st:%s,last:%s,email:phone1:%s,phone2:%s,member status:%s\
-  ,date_joined:%s,latest_renewal:%s,amount paid:%s,plot_counts:%d,\
-  member_counts:%d,plot_number%s%\n",\
+  pp a
+  printf("1st:%s, last:%s,email:%s,phone1:%s,phone2:%s,member status:%s,date_joined:%s,latest_renewal:%s,\
+#paid:%s,\
+plot_counts:%d,member_counts:%d,plot_number:%s\n",
   first_name,
   last_name,
   email,
@@ -51,8 +56,8 @@ arr_of_arrs.each do |a|
   date_joined,
   latest_renewal,
   amt_paid,
-  plot_counts,
-  member_counts,
+  plot_counts.to_i,
+  member_counts.to_i,
   plot_nummber)
 
   # existingPerson =  hoursColl.find_one({"first_name" => first_name, "last_name" => last_name})
