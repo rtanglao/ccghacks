@@ -78,6 +78,11 @@ arr_of_arrs.each do |a|
   end
   plot_array_2.each do |p| 
     printf("INSERTING plot:%s,%s,%s\n",p, last_name, first_name)
+    plot = {}
+    plot["last"] = last_name
+    plot["first"] = first_name
+    plot["plot"] = p
+    plotsColl.insert(plot)
   end
 
 end
